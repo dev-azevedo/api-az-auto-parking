@@ -1,5 +1,8 @@
 # 🚘 Az Auto Parking 🚘 By: Jhonatan Azevdo
 
+## Database
+![Diagrama](./docs/drawSQL-az-auto-parking.png)
+
 
 Api for get data automobile
 var type = 'carros' | 'motos' | 'caminhoes'
