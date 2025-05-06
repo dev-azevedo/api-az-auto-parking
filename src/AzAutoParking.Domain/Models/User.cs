@@ -1,0 +1,14 @@
+﻿namespace AzAutoParking.Domain.Models;
+
+public class User : BaseModel
+{
+    public required string FullName { get; set; }
+    public required string Email { get; set; }
+    public required string Password { get; set; }
+    public bool ConfirmedAccount { get; set; } = false;
+    public bool IsAdmin { get; set; } = false;
+    
+    public List<Reservation>? Reservations {get; set;}
+    public List<Automobile>? Automobile {get; set;}
+    public List<Log>? Log {get; set;}
+}
