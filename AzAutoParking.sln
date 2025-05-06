@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Domain", "src\AzAutoParking.Domain\AzAutoParking.Domain.csproj", "{A9B3A895-717E-4E89-9BE0-BB27ECEDC625}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Infra", "src\AzAutoParking.Infra\AzAutoParking.Infra.csproj", "{D71D4DBE-37D1-4E6C-8C13-73962DDA8A1D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Application", "src\AzAutoParking.Application\AzAutoParking.Application.csproj", "{CE89C1D4-3E49-4870-9927-A440BA038CFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Api", "src\AzAutoParking.Api\AzAutoParking.Api.csproj", "{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A9B3A895-717E-4E89-9BE0-BB27ECEDC625}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9B3A895-717E-4E89-9BE0-BB27ECEDC625}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9B3A895-717E-4E89-9BE0-BB27ECEDC625}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9B3A895-717E-4E89-9BE0-BB27ECEDC625}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D71D4DBE-37D1-4E6C-8C13-73962DDA8A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71D4DBE-37D1-4E6C-8C13-73962DDA8A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71D4DBE-37D1-4E6C-8C13-73962DDA8A1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71D4DBE-37D1-4E6C-8C13-73962DDA8A1D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE89C1D4-3E49-4870-9927-A440BA038CFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE89C1D4-3E49-4870-9927-A440BA038CFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE89C1D4-3E49-4870-9927-A440BA038CFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE89C1D4-3E49-4870-9927-A440BA038CFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
