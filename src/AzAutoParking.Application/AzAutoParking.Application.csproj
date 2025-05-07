@@ -6,4 +6,16 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Validator\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AzAutoParking.Domain\AzAutoParking.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="14.0.0" />
+    </ItemGroup>
+
 </Project>
