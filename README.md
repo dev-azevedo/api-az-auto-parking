@@ -5,7 +5,14 @@
 
 [Database diagram link](https://drawsql.app/teams/jhonatan-azevedo/diagrams/az-auto-parking-by-dev-azevedo)
 
-Api for get data automobile
+## 🎡 How to run migrations?
+Run command in Infra layer
+```bash
+  dotnet ef database update --context AppDbContext
+```
+
+
+### Api for get data automobile
 var type = 'carros' | 'motos' | 'caminhoes'
 https://parallelum.com.br/fipe/api/v1/{type}/marcas
 Return: 
