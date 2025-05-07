@@ -7,7 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="DotNetEnv" Version="3.1.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Controllers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\AzAutoParking.Application\AzAutoParking.Application.csproj" />
+      <ProjectReference Include="..\AzAutoParking.Domain\AzAutoParking.Domain.csproj" />
+      <ProjectReference Include="..\AzAutoParking.Infra\AzAutoParking.Infra.csproj" />
     </ItemGroup>
 
 </Project>

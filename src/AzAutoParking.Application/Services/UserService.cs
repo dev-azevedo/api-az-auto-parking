@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using AutoMapper;
+using AzAutoParking.Application.Dto;
 using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Response;
@@ -13,16 +14,21 @@ public class UserService(IUserRepository repository, IMapper mapper) : IUserServ
     private readonly IUserRepository _repository = repository;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<ResultResponse<(List<UserGetDto>, int)>> GetAllAsync(int skip, int take)
+    public async Task<ResultResponse<PaginationDto<UserGetDto>>> GetAllAsync(int skip, int take)
     {
-        var response = new ResultResponse<(List<UserGetDto>, int)>();
+        var response = new ResultResponse<PaginationDto<UserGetDto>>();
+       
         var (items, totalItems) = await _repository.GetAllAsync(skip, take);
         var itemsResult = _mapper.Map<List<UserGetDto>>(items);
-        var result = (itemsResult, totalItems);
+        var result = new PaginationDto<UserGetDto>
+        {
+            Items = itemsResult,
+            TotalItems = totalItems,
+        };
 
         return response.Success(HttpStatusCode.OK.GetHashCode(), result);
     }
-
+    
     public async Task<ResultResponse<UserGetDto>> GetByIdAsync(long id)
     {
         var response = new ResultResponse<UserGetDto>();
@@ -59,17 +65,19 @@ public class UserService(IUserRepository repository, IMapper mapper) : IUserServ
     public async Task<ResultResponse<UserGetDto>> UpdateAsync(UserUpdateDto user)
     {
         var response = new ResultResponse<UserGetDto>();
-        var userOnDb = await GetByIdAsync(user.Id);
+        var userOnDb = await _repository.GetByIdAsync(user.Id);
 
-        if (!userOnDb.IsSuccess)
+        if (userOnDb is null)
         {   
-            userOnDb.Message  = userOnDb.Message ?? "User not found";
-            return response.Fail(userOnDb.StatusCode, userOnDb.Message);
+            var message = "User not found";
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), message);
         }
         
-        var userModel = _mapper.Map<User>(user);
-        var userUpdate = await _repository.UpdateAsync(userModel);
-        var userResponse = _mapper.Map<UserGetDto>(userOnDb);
+        userOnDb.FullName = user.FullName;
+        userOnDb.Email = user.Email;
+            
+        var userUpdate = await _repository.UpdateAsync(userOnDb);
+        var userResponse = _mapper.Map<UserGetDto>(userUpdate);
         
         return response.Success(
             HttpStatusCode.OK.GetHashCode(), 
