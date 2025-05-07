@@ -11,6 +11,10 @@ Run command in Infra layer
   dotnet ef database update --context AppDbContext
 ```
 
+### User
+GET `users?skip=1&take=2`
+GET `users/id`
+POST ```
 
 ### Api for get data automobile
 var type = 'carros' | 'motos' | 'caminhoes'
