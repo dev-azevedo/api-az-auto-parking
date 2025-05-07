@@ -1,7 +1,7 @@
 # 🚘 Az Auto Parking 🚘 By: Jhonatan Azevdo
 
 ## 🗃️ Database
-![Diagrama](./docs/drawSQL-az-auto-parking.png)
+![Diagrama](docs/drawSQL-az-auto-parking.png)
 
 [Database diagram link](https://drawsql.app/teams/jhonatan-azevedo/diagrams/az-auto-parking-by-dev-azevedo)
 
