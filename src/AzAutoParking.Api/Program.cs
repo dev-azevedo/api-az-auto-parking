@@ -7,10 +7,11 @@ Env.Load(Path.Combine(Directory.GetCurrentDirectory(), ".env"));
 // Add services to the container.
 
 builder.Services.AddDbSetup();
-builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDiSetup();
+builder.Services.AddFluentValidationSetup();
 builder.Services.AddCors();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
