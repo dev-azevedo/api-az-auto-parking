@@ -20,7 +20,7 @@ public class UserCreateValidator : AbstractValidator<UserCreateDto>
 
         RuleFor(u => u.Password)
             .NotEmpty().WithMessage("Senha é obrigatório.")
-            .Length(8).WithMessage("Senha deve ter pelo menos 8 caracteres.")
+            .MinimumLength(8).WithMessage("Senha deve ter pelo menos 8 caracteres.")
             .Equal(c => c.ConfirmedPassword).WithMessage("Senha não coincide com campos confirmar senha.");
     }
 }

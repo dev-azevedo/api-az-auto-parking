@@ -13,6 +13,7 @@ public class UserService(IUserRepository repository, IMapper mapper) : IUserServ
 {
     private readonly IUserRepository _repository = repository;
     private readonly IMapper _mapper = mapper;
+    private readonly IPasswordHasher _hasher = new PasswordHasher();
 
     public async Task<ResultResponse<PaginationDto<UserGetDto>>> GetAllAsync(int skip, int take)
     {
@@ -45,7 +46,18 @@ public class UserService(IUserRepository repository, IMapper mapper) : IUserServ
             _mapper.Map<UserGetDto>(item));
     }
 
-    public Task<ResultResponse<UserGetDto>> GetByEmailAsync(string email)
+    public async Task<ResultResponse<UserGetDto>> GetByEmailAsync(string email)
+    {
+        var response = new ResultResponse<UserGetDto>();
+        var item = await _repository.GetByEmailAsync(email);
+        
+        if (item is null)
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), $"User not found");
+        
+        return response.Success(HttpStatusCode.OK.GetHashCode(), _mapper.Map<UserGetDto>(item));
+    }
+
+    public Task<ResultResponse<UserGetDto>> SignIn(string email, string password)
     {
         throw new NotImplementedException();
     }
@@ -53,7 +65,14 @@ public class UserService(IUserRepository repository, IMapper mapper) : IUserServ
     public async Task<ResultResponse<UserGetDto>> CreateAsync(UserCreateDto user)
     {
         var response = new ResultResponse<UserGetDto>();
+        var userOnDb = await _repository.GetByEmailAsync(user.Email);
+        
+        if (userOnDb is not null)
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), $"Email already exists");
+
+        var passwordHasher = _hasher.HashPassword(user.Password);
         var userModel = _mapper.Map<User>(user);
+        userModel.Password = passwordHasher;
         var userCreated = await _repository.CreateAsync(userModel);
         var userResponse = _mapper.Map<UserGetDto>(userCreated);
         
