@@ -40,6 +40,20 @@ namespace AzAutoParking.Api.Controllers
                 return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
             }
         }
+
+        [HttpPost("signin")]
+        public async Task<IActionResult> SignInAsync(UserSignInDto userSignInDto)
+        {
+            try
+            {
+                var response = await _service.SignIn(userSignInDto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+        }
         
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] UserCreateDto userCreateDto)
@@ -47,7 +61,6 @@ namespace AzAutoParking.Api.Controllers
             try
             {
                 var response = await _service.CreateAsync(userCreateDto);
-
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)

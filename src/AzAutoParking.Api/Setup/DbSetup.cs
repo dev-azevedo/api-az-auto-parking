@@ -6,10 +6,10 @@ namespace AzAutoParking.Api.Setup;
 
 public static class DbSetup
 {
-    public static void AddDbSetup(this IServiceCollection services)
+    public static void AddDbSetup(this IServiceCollection services, IConfiguration configuration)
     {   
-        var envDbName = Env.GetString("DB_NAME");
-        var databasePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", envDbName);
+        var dbName = configuration["Database:Name"] ?? throw new ArgumentNullException("Database:Name");
+        var databasePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", dbName);
         services.AddDbContext<AppDbContext>(options => options.UseSqlite($"Data Source={databasePath}"));
     }
 }

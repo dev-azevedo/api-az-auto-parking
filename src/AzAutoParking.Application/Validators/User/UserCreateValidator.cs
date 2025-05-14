@@ -2,7 +2,7 @@
 using AzAutoParking.Application.Dto.User;
 using FluentValidation;
 
-namespace AzAutoParking.Application.Validator.User;
+namespace AzAutoParking.Application.Validators.User;
 
 public class UserCreateValidator : AbstractValidator<UserCreateDto>
 {

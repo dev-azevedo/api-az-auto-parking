@@ -3,7 +3,7 @@ using AzAutoParking.Application.Interfaces;
 
 namespace AzAutoParking.Application.Services;
 
-public class PasswordHasher : IPasswordHasher
+public class PasswordHasherService : IPasswordHasherService
 {   
     public string HashPassword(string password)
     {
