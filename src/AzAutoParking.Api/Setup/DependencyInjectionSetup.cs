@@ -24,6 +24,6 @@ public static class DependencyInjectionSetup
     private static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IJwtService, JwtService>();
+        services.AddSingleton<IJwtService, JwtService>();
     }
 }

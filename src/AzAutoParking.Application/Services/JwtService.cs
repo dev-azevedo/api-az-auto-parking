@@ -11,7 +11,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public string GenerateJwtToken(string email, string fullname, long id)
+    public string GenerateJwtToken( long id, string email, string fullname, bool isAdmin)
     {
         var secretKey = _configuration["JWT:Secret"] ?? throw new ArgumentNullException("JWT:Secret");
         
@@ -23,6 +23,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
             new Claim("id", id.ToString()),
             new Claim("fullname", fullname),
             new Claim("email", email),
+            new Claim("isAdmin", isAdmin.ToString()),
         };
 
         var token = new JwtSecurityToken(
@@ -34,5 +35,32 @@ public class JwtService(IConfiguration configuration) : IJwtService
         );
         
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    public ClaimsPrincipal? ValidateToken(string token)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var secretKey = _configuration["JWT:Secret"] ?? throw new ArgumentNullException("JWT:Secret");
+
+        try
+        {
+            var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                ValidateIssuer = true,
+                ValidIssuer = _configuration["JWT:Issuer"],
+                ValidateAudience = true,
+                ValidAudience = _configuration["JWT:Audience"],
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            }, out SecurityToken validatedToken); 
+            
+            return principal;
+        }
+        catch
+        {
+            return null;
+        }
     }
 }

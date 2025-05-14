@@ -71,9 +71,9 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         
         // if(!user.ConfirmedAccount)
         //     return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Verify email. Sent an email for confirmation of your account.");
-        //     
+            
         
-        var token = _jwtService.GenerateJwtToken(user.Email, user.FullName, user.Id);
+        var token = _jwtService.GenerateJwtToken(user.Id, user.Email, user.FullName, user.IsAdmin);
         
         var userDto = _mapper.Map<UserGetDto>(user);
         userDto.Token = token;
@@ -113,6 +113,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         
         userOnDb.FullName = user.FullName;
         userOnDb.Email = user.Email;
+        userOnDb.IsAdmin = user.IsAdmin ?? userOnDb.IsAdmin;
             
         var userUpdate = await _repository.UpdateAsync(userOnDb);
         var userResponse = _mapper.Map<UserGetDto>(userUpdate);

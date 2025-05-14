@@ -18,9 +18,11 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
 
     public async Task<(List<T>, int)> GetAllAsync(int skip = 1, int take = 10)
     {
-        var totalItems = await DbSet.CountAsync();
+        var query = DbSet.Where(m => m.IsActive);
+        
+        var totalItems = await query.CountAsync();
         var setSkip = (skip - 1) * take;
-        var items = await DbSet.Skip(setSkip).Take(take).Where(c => c.IsActive).ToListAsync();
+        var items = await query.Skip(setSkip).Take(take).ToListAsync();
         
         return (items, totalItems);
     }

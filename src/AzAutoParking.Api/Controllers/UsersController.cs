@@ -1,6 +1,7 @@
 using System.Net;
 using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AzAutoParking.Api.Controllers
@@ -10,7 +11,8 @@ namespace AzAutoParking.Api.Controllers
     public class UsersController(IUserService service) : ControllerBase
     {
         private readonly IUserService _service = service;
-
+        
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetAllAsync([FromQuery] int skip = 1, int take = 10)
         {
@@ -26,6 +28,7 @@ namespace AzAutoParking.Api.Controllers
             }
         }
         
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync([FromRoute] long id)
         {
@@ -69,6 +72,7 @@ namespace AzAutoParking.Api.Controllers
             }
         }
         
+        [Authorize]
         [HttpPut]
         public async Task<IActionResult> UpdateAsync([FromBody] UserUpdateDto userUpdateDto)
         {
@@ -84,6 +88,7 @@ namespace AzAutoParking.Api.Controllers
             }
         }
         
+        [Authorize(Policy = "IsAdmin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] long id)
         {
@@ -91,7 +96,7 @@ namespace AzAutoParking.Api.Controllers
             {
                 var response = await _service.DeactiveAsync(id);
 
-                return StatusCode(response.StatusCode, response);
+                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
             {
