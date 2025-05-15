@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvSetup();
 builder.Services.AddDbSetup(builder.Configuration);
 builder.Services.AddJwtSetup();
-builder.Services.AddDiSetup();
+builder.Services.AddDiSetup(builder.Configuration);
 builder.Services.AddFluentValidationSetup();
 builder.Services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy => policy.RequireClaim("isAdmin", "True")));
 

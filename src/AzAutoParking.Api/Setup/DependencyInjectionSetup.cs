@@ -3,15 +3,16 @@ using AzAutoParking.Application.Mapper;
 using AzAutoParking.Application.Services;
 using AzAutoParking.Domain.Interfaces;
 using AzAutoParking.Infra.Data.Repository;
+using AzAutoParking.Infra.ExternalServices;
 
 namespace AzAutoParking.Api.Setup;
 
 public static class DependencyInjectionSetup
 {
-    public static void AddDiSetup(this IServiceCollection services)
+    public static void AddDiSetup(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddRepositories();
-        services.AddServices();
+        services.AddServices(configuration);
         services.AddAutoMapper(typeof(AutoMapperConfig));
     }
 
@@ -21,9 +22,21 @@ public static class DependencyInjectionSetup
         services.AddScoped<IUserRepository, UserRepository>();
     }
 
-    private static void AddServices(this IServiceCollection services)
+    private static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IEmailService, EmailService>();
         services.AddSingleton<IJwtService, JwtService>();
+        
+        var emailSmtpHost = configuration["Email:SmtpHost"] ?? throw new ArgumentNullException("Email:SmtpHost");
+        services.AddSingleton<ISmtpEmailService>(provider =>
+            new SmtpEmailService(
+                smtpHost: emailSmtpHost,
+                smtpPort: int.Parse(configuration["Email:SmtpPort"]), 
+                from: configuration["Email:From"],
+                nameFrom: configuration["Email:NameFrom"],
+                password: configuration["Email:Password"]
+            )
+        );
     }
 }

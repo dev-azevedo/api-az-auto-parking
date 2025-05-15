@@ -6,14 +6,16 @@ using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Response;
 using AzAutoParking.Domain.Interfaces;
 using AzAutoParking.Domain.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace AzAutoParking.Application.Services;
 
-public class UserService(IUserRepository repository, IMapper mapper, IJwtService jwtService) : IUserService
+public class UserService(IUserRepository repository, IMapper mapper, IJwtService jwtService, IEmailService emailService) : IUserService
 {
     private readonly IUserRepository _repository = repository;
     private readonly IMapper _mapper = mapper;
     private readonly IJwtService _jwtService = jwtService;
+    private readonly IEmailService _emailService = emailService;
     private readonly IPasswordHasherService _hasherService = new PasswordHasherService();
 
     public async Task<ResultResponse<PaginationDto<UserGetDto>>> GetAllAsync(int skip, int take)
@@ -94,6 +96,11 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         userModel.Password = passwordHasher;
         var userCreated = await _repository.CreateAsync(userModel);
         var userResponse = _mapper.Map<UserGetDto>(userCreated);
+        
+        var subject = "Bem-vindo ao AzAutoParking";
+        var message = "Código de validação: 123456";
+        
+        await _emailService.NotifyUserAsync(user.Email, subject, message: message);
         
         return response.Success(
             HttpStatusCode.Created.GetHashCode(), 
