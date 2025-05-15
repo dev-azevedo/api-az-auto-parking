@@ -102,6 +102,21 @@ namespace AzAutoParking.Api.Controllers
             }
         }
         
+        [Authorize]
+        [HttpPost("change/password")]
+        public async Task<IActionResult> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto)
+        {
+            try
+            {
+                var response = await _service.ChangePasswordAsync(userChangePasswordDto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+        }
+        
         [Authorize(Policy = "IsAdmin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAsync([FromRoute] long id)

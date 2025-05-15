@@ -63,21 +63,21 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
     public async Task<ResultResponse<UserGetDto>> SignIn(UserSignInDto userSignInDto)
     {
         var response = new ResultResponse<UserGetDto>();
-        var user = await _repository.GetByEmailAsync(userSignInDto.Email);
-        if (user is null)
+        var userOnDb = await _repository.GetByEmailAsync(userSignInDto.Email);
+        if (userOnDb is null)
             return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Email/Password invalid");
 
-        var verifyPass = _hasherService.VerifyHashedPassword(userSignInDto.Password, user.Password);
+        var verifyPass = _hasherService.VerifyHashedPassword(userSignInDto.Password, userOnDb.Password);
         if (!verifyPass)
             return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Email/Password invalid");
 
-        if(!user.ConfirmedAccount)
+        if(!userOnDb.ConfirmedAccount)
             return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Verify email. Sent an email for confirmation of your account.");
 
 
-        var token = _jwtService.GenerateJwtToken(user.Id, user.Email, user.FullName, user.IsAdmin);
+        var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
 
-        var userDto = _mapper.Map<UserGetDto>(user);
+        var userDto = _mapper.Map<UserGetDto>(userOnDb);
         userDto.Token = token;
 
         return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
@@ -133,6 +133,30 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
             userResponse);
+    }
+
+    public async Task<ResultResponse<UserGetDto>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto)
+    {
+        var response = new ResultResponse<UserGetDto>();
+        var userOnDb = await _repository.GetByIdAsync(userChangePasswordDto.Id);
+        if (userOnDb is null)
+        {
+            var message = "User not found";
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), message);
+        }
+        
+        
+        var verifyPass = _hasherService.VerifyHashedPassword(userChangePasswordDto.OldPassword, userOnDb.Password);
+        if (!verifyPass)
+            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Old Password invalid");
+        
+        var passwordHasher = _hasherService.HashPassword(userChangePasswordDto.NewPassword);
+        userOnDb.Password = passwordHasher;
+        
+        var userUpdated = await _repository.UpdateAsync(userOnDb);
+        var userResponse = _mapper.Map<UserGetDto>(userOnDb);
+        
+        return response.Success(HttpStatusCode.OK.GetHashCode(), userResponse);
     }
 
     public async Task<ResultResponse<UserGetDto>> ConfirmAccountAsync(UserConfirmAccountDto userConfirmAccountDto)

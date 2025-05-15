@@ -13,5 +13,6 @@ public static class FluentValidationSetup
         services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
         services.AddValidatorsFromAssemblyContaining<UserSignInValidator>();
         services.AddValidatorsFromAssemblyContaining<UserConfirmAccountValidator>();
+        services.AddValidatorsFromAssemblyContaining<UserChangePasswordValidator>();
     }
 }

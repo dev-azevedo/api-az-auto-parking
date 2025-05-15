@@ -7,8 +7,8 @@ public class UserConfirmAccountValidator : AbstractValidator<UserConfirmAccountD
 {
     public UserConfirmAccountValidator()
     {
-        RuleFor(c => c.Id).GreaterThan(0).WithMessage("O Id deve ser maior que zero.");
-        RuleFor(c => c.Code)
+        RuleFor(u => u.Id).GreaterThan(0).WithMessage("O Id deve ser maior que zero.");
+        RuleFor(u => u.Code)
             .NotEmpty().WithMessage("O Código é obriagtório")
             .Length(8).WithMessage("O código dever ter pelo menos 8 caracteres.");
     }
