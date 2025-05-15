@@ -87,6 +87,20 @@ namespace AzAutoParking.Api.Controllers
                 return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
             }
         }
+
+        [HttpPost("confirm")]
+        public async Task<IActionResult> ConfirmAccountAsync([FromBody] UserConfirmAccountDto userConfirmAccountDto)
+        {
+            try
+            {
+                var response = await _service.ConfirmAccountAsync(userConfirmAccountDto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+        }
         
         [Authorize(Policy = "IsAdmin")]
         [HttpDelete("{id}")]
