@@ -1,4 +1,4 @@
-# 🚘 Az Auto Parking 🚘 By: Jhonatan Azevdo
+# 🚘 Az Auto Parking 🚘 By: Jhonatan Azevedo
 
 ## 🗃️ Database
 ![Diagrama](docs/drawSQL-az-auto-parking.png)
@@ -11,7 +11,9 @@ Run command in Infra layer
   dotnet ef database update --context AppDbContext
 ```
 
-### User
+## 🧪 How to test?
+documentation with postman [here](docs/AzAutoParking.postman_collection.json).
+Import in Postman
 
 ### Api for get data automobile
 var type = 'carros' | 'motos' | 'caminhoes'
@@ -32,6 +34,3 @@ Return:
 }
 ```
 
-
-varificar o porque - _validateCode não funciona
-terminal o metodo de forgotpassword

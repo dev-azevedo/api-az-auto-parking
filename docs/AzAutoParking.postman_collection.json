@@ -1,0 +1,371 @@
+{
+	"info": {
+		"_postman_id": "7128218b-c1cb-4497-a026-e8225db9d981",
+		"name": "AzAutoParking",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18408226"
+	},
+	"item": [
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/users/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "skip",
+									"value": "0",
+									"disabled": true
+								},
+								{
+									"key": "take",
+									"value": "4",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"FullName\": \"Jhonatan Azevedo\",\r\n    \"Email\": \"jhow.h.azevedo@gmail.com\",\r\n    \"Password\": \"Dev123@123\",\r\n    \"ConfirmedPassword\": \"Dev123@123\"\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 6,\r\n    \"fullName\": \"Jhonatan Azevedo\",\r\n    \"email\": \"dev.azevedo123@gmail.com\",\r\n    \"isAdmin\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/users/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactive",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/users/5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "SingIn",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.environment.set(\"token\", response.data.token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jhow.h.azevedo@gmail.com\",\r\n    \"password\": \"Dev@123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/signin/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"signin",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConfirmAccount",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jhow.h.azevedo@gmail.com\",\r\n    \"code\": \"C6hK1x3i\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/verify/account",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"verify",
+								"account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ChangePassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJmdWxsbmFtZSI6Ikpob25hdGFuIEF6ZXZlZG8iLCJlbWFpbCI6Impob3cuaC5hemV2ZWRvQGdtYWlsLmNvbSIsImlzQWRtaW4iOiJGYWxzZSIsInJlc2V0UGFzc3dvcmQiOiJUcnVlIiwiZXhwIjoxNzQ3NDE4OTU1LCJpc3MiOiJhcGktYXotYXV0by1wYXJraW5nIiwiYXVkIjoiYXBpLWF6LWF1dG8tcGFya2luZy1jbGllbnQifQ.lcyp7VTxPNSVj8qLn_5Zml6oF94_20aOCmgLWHYucKA",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"oldPassword\": \"Dev123@123\",\r\n    \"newPassword\": \"Dev@123456\",\r\n    \"confirmedNewPassword\": \"Dev@123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/password/change",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"password",
+								"change"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ForgotPassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJmdWxsbmFtZSI6Ikpob25hdGFuIEF6ZXZlZG8iLCJlbWFpbCI6Impob3cuaC5hemV2ZWRvQGdtYWlsLmNvbSIsImlzQWRtaW4iOiJGYWxzZSIsImV4cCI6MTc0NzQ5MzUyMywiaXNzIjoiYXBpLWF6LWF1dG8tcGFya2luZyIsImF1ZCI6ImFwaS1hei1hdXRvLXBhcmtpbmctY2xpZW50In0.id-Zi0nEta_KZ5LvWKBVYsmjVD9XHA8qc0NSBCH6GyE",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "\"jhow.h.azevedo@gmail.com\"",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/password/forgot",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"password",
+								"forgot"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VerifyCode",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let response = pm.response.json();\r",
+									"pm.environment.set(\"token\", response.access_token);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jhow.h.azevedo@gmail.com\",\r\n    \"code\": \"q3ho37ST\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/verify/code",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"verify",
+								"code"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ResetPassword",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"newPassword\": \"Dev@123456\",\r\n    \"confirmedNewPassword\": \"Dev@123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/auth/password/reset",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"auth",
+								"password",
+								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
