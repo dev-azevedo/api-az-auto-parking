@@ -27,7 +27,7 @@ public class JwtAuthenticationMiddleware(RequestDelegate next, IJwtService jwtSe
                 if (isResetPassword && path != null && !path.Contains("password/reset"))
                 {
                     context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                    await context.Response.WriteAsync("Acesso restrito. Apenas rotas de redefinição de senha estão disponíveis.");
+                    await context.Response.WriteAsync("Acesso restrito.");
                     return;
                 }
             }

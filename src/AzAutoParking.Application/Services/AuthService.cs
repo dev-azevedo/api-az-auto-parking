@@ -74,6 +74,10 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         }
 
         var userOnDb = userResponse.Data;
+        userOnDb.ConfirmationCode = null;
+        userOnDb.Modified = DateTime.Now;
+        
+        await _userRepository.UpdateAsync(userOnDb);
         
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin, true, 1);
 
