@@ -1,11 +1,11 @@
-﻿using AzAutoParking.Application.Dto.User;
+﻿using AzAutoParking.Application.Dto.Auth;
 using FluentValidation;
 
-namespace AzAutoParking.Application.Validators.User;
+namespace AzAutoParking.Application.Validators.Auth;
 
-public class UserChangePasswordValidator : AbstractValidator<UserChangePasswordDto>
+public class AuthChangePasswordValidator : AbstractValidator<AuthChangePasswordDto>
 {
-    public UserChangePasswordValidator()
+    public AuthChangePasswordValidator()
     {
         RuleFor(u => u.Id).GreaterThan(0).WithMessage("O Id deve ser maior que zero.");
         RuleFor(u => u.OldPassword)

@@ -1,11 +1,11 @@
-﻿using AzAutoParking.Application.Dto.User;
+﻿using AzAutoParking.Application.Dto.Auth;
 using FluentValidation;
 
-namespace AzAutoParking.Application.Validators.User;
+namespace AzAutoParking.Application.Validators.Auth;
 
-public class UserSignInValidator : AbstractValidator<UserSignInDto>
+public class AuthSignInValidator : AbstractValidator<AuthSignInDto>
 {
-    public UserSignInValidator()
+    public AuthSignInValidator()
     {
         RuleFor(u => u.Email)
             .NotEmpty().WithMessage("Email completo é obrigatório")

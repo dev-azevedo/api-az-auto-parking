@@ -1,4 +1,5 @@
-﻿using AzAutoParking.Application.Validators.User;
+﻿using AzAutoParking.Application.Validators.Auth;
+using AzAutoParking.Application.Validators.User;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 
@@ -8,11 +9,15 @@ public static class FluentValidationSetup
 {
     public static void AddFluentValidationSetup(this IServiceCollection services)
     {
-        // User
         services.AddFluentValidationAutoValidation();
+        
+        // Auth
+        services.AddValidatorsFromAssemblyContaining<AuthSignInValidator>();
+        services.AddValidatorsFromAssemblyContaining<AuthConfirmCodeValidator>();
+        services.AddValidatorsFromAssemblyContaining<AuthChangePasswordValidator>();
+        services.AddValidatorsFromAssemblyContaining<AuthResetPasswordValidator>();
+        
+        // User
         services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
-        services.AddValidatorsFromAssemblyContaining<UserSignInValidator>();
-        services.AddValidatorsFromAssemblyContaining<UserConfirmAccountValidator>();
-        services.AddValidatorsFromAssemblyContaining<UserChangePasswordValidator>();
     }
 }

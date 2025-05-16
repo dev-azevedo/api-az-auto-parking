@@ -1,6 +1,6 @@
-﻿namespace AzAutoParking.Application.Dto.User;
+﻿namespace AzAutoParking.Application.Dto.Auth;
 
-public class UserChangePasswordDto
+public class AuthChangePasswordDto
 {
     public long Id { get; set; }
     public required string OldPassword { get; set; }

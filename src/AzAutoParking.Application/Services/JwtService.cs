@@ -11,7 +11,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public string GenerateJwtToken( long id, string email, string fullname, bool isAdmin, int expirationMinutes = 1440)
+    public string GenerateJwtToken( long id, string email, string fullname, bool isAdmin, bool resetPassword = false, int expirationMinutes = 1440)
     {
         var secretKey = _configuration["JWT:Secret"] ?? throw new ArgumentNullException("JWT:Secret");
         
@@ -24,6 +24,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
             new Claim("fullname", fullname),
             new Claim("email", email),
             new Claim("isAdmin", isAdmin.ToString()),
+            new Claim("resetPassword", resetPassword.ToString()),
         };
 
         var token = new JwtSecurityToken(

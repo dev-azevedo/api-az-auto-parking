@@ -1,6 +1,6 @@
-﻿namespace AzAutoParking.Application.Dto.User;
+﻿namespace AzAutoParking.Application.Dto.Auth;
 
-public class UserConfirmCodeDto
+public class AuthConfirmCodeDto
 {
     public required string Email { get; set; }
     public required string Code { get; set; }

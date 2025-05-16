@@ -1,4 +1,5 @@
 using System.Net;
+using AzAutoParking.Application.Dto.Auth;
 using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -13,11 +14,11 @@ namespace AzAutoParking.Api.Controllers
         private readonly IAuthService _service = authService;
         
         [HttpPost("signin")]
-        public async Task<IActionResult> SignInAsync(UserSignInDto userSignInDto)
+        public async Task<IActionResult> SignInAsync(AuthSignInDto authSignInDto)
         {
             try
             {
-                var response = await _service.SignIn(userSignInDto);
+                var response = await _service.SignIn(authSignInDto);
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -26,27 +27,74 @@ namespace AzAutoParking.Api.Controllers
             }
         }
         
-        [HttpPost("confirm")]
-        public async Task<IActionResult> ConfirmAccountAsync([FromBody] UserConfirmCodeDto userConfirmCodeDto)
+        [HttpPost("verify/account")]
+        public async Task<IActionResult> ConfirmAccountAsync([FromBody] AuthConfirmCodeDto authConfirmCodeDto)
         {
             try
             {
-                var response = await _service.ConfirmAccountAsync(userConfirmCodeDto);
+                var response = await _service.ConfirmAccountAsync(authConfirmCodeDto);
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
             {
                 return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
             }
+        }
+
+        [HttpPost("verify/code")]
+        public async Task<IActionResult> ConfirmCodeAsync(AuthConfirmCodeDto authConfirmCodeDto)
+        {
+            try
+            {
+                var response = await _service.VerifyCode(authConfirmCodeDto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+        }
+        
+        [HttpPost("password/forgot")]
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] string email)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(email))
+                    return StatusCode(HttpStatusCode.BadRequest.GetHashCode(), "email is null");
+                
+                var response = await _service.ForgotPasswordAsync(email);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("password/reset")]
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] AuthResetPasswordDto authResetPasswordDto)
+        {
+            try
+            {
+                var response = await _service.ResetPasswordAsync(authResetPasswordDto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+            
         }
         
         [Authorize]
-        [HttpPost("change/password")]
-        public async Task<IActionResult> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto)
+        [HttpPost("password/change")]
+        public async Task<IActionResult> ChangePasswordAsync(AuthChangePasswordDto authChangePasswordDto)
         {
             try
             {
-                var response = await _service.ChangePasswordAsync(userChangePasswordDto);
+                var response = await _service.ChangePasswordAsync(authChangePasswordDto);
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)
@@ -54,5 +102,6 @@ namespace AzAutoParking.Api.Controllers
                 return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
             }
         }
+        
     }
 }

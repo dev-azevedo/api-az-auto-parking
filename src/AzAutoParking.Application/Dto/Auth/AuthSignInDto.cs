@@ -1,6 +1,6 @@
-﻿namespace AzAutoParking.Application.Dto.User;
+﻿namespace AzAutoParking.Application.Dto.Auth;
 
-public class UserSignInDto
+public class AuthSignInDto
 {
     public required string Email { get; set; }
     public required string Password { get; set; }

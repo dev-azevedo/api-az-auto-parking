@@ -20,6 +20,16 @@ public class JwtAuthenticationMiddleware(RequestDelegate next, IJwtService jwtSe
             if (principal != null)
             {
                 context.User = principal;
+                
+                var isResetPassword = principal.HasClaim(c => c.Type == "resetPassword" && c.Value == "True");
+                var path = context.Request.Path.Value?.ToLower();
+                
+                if (isResetPassword && path != null && !path.Contains("password/reset"))
+                {
+                    context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                    await context.Response.WriteAsync("Acesso restrito. Apenas rotas de redefinição de senha estão disponíveis.");
+                    return;
+                }
             }
             else
             {
