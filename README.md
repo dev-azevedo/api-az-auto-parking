@@ -31,3 +31,7 @@ Return:
     "nome": "147 C/ CL"
 }
 ```
+
+
+varificar o porque - _validateCode não funciona
+terminal o metodo de forgotpassword

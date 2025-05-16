@@ -5,6 +5,6 @@ namespace AzAutoParking.Application.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateJwtToken(long id, string email, string fullname, bool isAdmin);
+    string GenerateJwtToken(long id, string email, string fullname, bool isAdmin, int expirationMinutes = 1440);
     ClaimsPrincipal? ValidateToken(string token);
 }

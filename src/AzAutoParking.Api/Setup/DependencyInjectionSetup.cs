@@ -25,6 +25,7 @@ public static class DependencyInjectionSetup
     private static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddSingleton<IJwtService, JwtService>();
         

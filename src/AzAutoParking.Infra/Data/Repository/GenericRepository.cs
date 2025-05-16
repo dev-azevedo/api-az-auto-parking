@@ -18,7 +18,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
 
     public async Task<(List<T>, int)> GetAllAsync(int skip = 1, int take = 10)
     {
-        var query = DbSet.Where(m => m.IsActive);
+        var query = DbSet.AsNoTracking().Where(m => m.IsActive);
         
         var totalItems = await query.CountAsync();
         var setSkip = (skip - 1) * take;
@@ -29,7 +29,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
 
     public async Task<T?> GetByIdAsync(long id)
     {
-        return await DbSet.FirstOrDefaultAsync(c => c.Id == id && c.IsActive);
+        return await DbSet.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id && c.IsActive);
     }
 
     public async Task<T> CreateAsync(T item)
@@ -41,7 +41,7 @@ public class GenericRepository<T> : IGenericRepository<T> where T : BaseModel
 
     public async Task<T> UpdateAsync(T item)
     {
-        Context.Entry(item).CurrentValues.SetValues(item);
+        DbSet.Update(item);
         await Context.SaveChangesAsync();
         return item;
     }

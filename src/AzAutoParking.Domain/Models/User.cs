@@ -6,7 +6,7 @@ public class User : BaseModel
     public required string Email { get; set; }
     public required string Password { get; set; }
     public bool ConfirmedAccount { get; set; } = false;
-    public required string CodeConfirmedAccount { get; set; }
+    public string? ConfirmationCode { get; set; }
     public bool IsAdmin { get; set; } = false;
     
     public List<Reservation>? Reservations {get; set;}

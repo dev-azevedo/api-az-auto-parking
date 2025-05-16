@@ -11,7 +11,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
 {
     private readonly IConfiguration _configuration = configuration;
 
-    public string GenerateJwtToken( long id, string email, string fullname, bool isAdmin)
+    public string GenerateJwtToken( long id, string email, string fullname, bool isAdmin, int expirationMinutes = 1440)
     {
         var secretKey = _configuration["JWT:Secret"] ?? throw new ArgumentNullException("JWT:Secret");
         
@@ -30,7 +30,7 @@ public class JwtService(IConfiguration configuration) : IJwtService
             issuer: _configuration["JWT:Issuer"],
             audience: _configuration["JWT:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddHours(24),
+            expires: DateTime.Now.AddMinutes(expirationMinutes),
             signingCredentials: credentials
         );
         

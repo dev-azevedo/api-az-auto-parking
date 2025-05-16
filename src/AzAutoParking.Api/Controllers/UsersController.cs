@@ -44,19 +44,7 @@ namespace AzAutoParking.Api.Controllers
             }
         }
 
-        [HttpPost("signin")]
-        public async Task<IActionResult> SignInAsync(UserSignInDto userSignInDto)
-        {
-            try
-            {
-                var response = await _service.SignIn(userSignInDto);
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
-            }
-        }
+      
         
         [HttpPost]
         public async Task<IActionResult> CreateAsync([FromBody] UserCreateDto userCreateDto)
@@ -80,35 +68,6 @@ namespace AzAutoParking.Api.Controllers
             {
                 var response = await _service.UpdateAsync(userUpdateDto);
 
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
-            }
-        }
-
-        [HttpPost("confirm")]
-        public async Task<IActionResult> ConfirmAccountAsync([FromBody] UserConfirmAccountDto userConfirmAccountDto)
-        {
-            try
-            {
-                var response = await _service.ConfirmAccountAsync(userConfirmAccountDto);
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
-            }
-        }
-        
-        [Authorize]
-        [HttpPost("change/password")]
-        public async Task<IActionResult> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto)
-        {
-            try
-            {
-                var response = await _service.ChangePasswordAsync(userChangePasswordDto);
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)

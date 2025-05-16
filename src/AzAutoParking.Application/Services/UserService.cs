@@ -14,7 +14,6 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
 {
     private readonly IUserRepository _repository = repository;
     private readonly IMapper _mapper = mapper;
-    private readonly IJwtService _jwtService = jwtService;
     private readonly IEmailService _emailService = emailService;
     private readonly IPasswordHasherService _hasherService = new PasswordHasherService();
 
@@ -60,29 +59,6 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         return response.Success(HttpStatusCode.OK.GetHashCode(), _mapper.Map<UserGetDto>(item));
     }
 
-    public async Task<ResultResponse<UserGetDto>> SignIn(UserSignInDto userSignInDto)
-    {
-        var response = new ResultResponse<UserGetDto>();
-        var userOnDb = await _repository.GetByEmailAsync(userSignInDto.Email);
-        if (userOnDb is null)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Email/Password invalid");
-
-        var verifyPass = _hasherService.VerifyHashedPassword(userSignInDto.Password, userOnDb.Password);
-        if (!verifyPass)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Email/Password invalid");
-
-        if(!userOnDb.ConfirmedAccount)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Verify email. Sent an email for confirmation of your account.");
-
-
-        var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
-
-        var userDto = _mapper.Map<UserGetDto>(userOnDb);
-        userDto.Token = token;
-
-        return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
-    }
-
     public async Task<ResultResponse<UserGetDto>> CreateAsync(UserCreateDto user)
     {
         var response = new ResultResponse<UserGetDto>();
@@ -94,7 +70,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         var passwordHasher = _hasherService.HashPassword(user.Password);
         var userModel = _mapper.Map<User>(user);
         userModel.Password = passwordHasher;
-        userModel.CodeConfirmedAccount = GenerateRandomCode();
+        userModel.ConfirmationCode = GenerateRandomConfirmationCode();
         
         var userCreated = await _repository.CreateAsync(userModel);
         var userResponse = _mapper.Map<UserGetDto>(userCreated);
@@ -102,7 +78,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         var subject = "Bem-vindo ao AzAutoParking";
         var message = $@"
                         <p>Olá {userModel.FullName}, seja bem-vindo(a)</p>
-                        <p>Confirme sua conta aqui!</p>
+                        <p>Confirme sua conta aqui: {userModel.ConfirmationCode}</p>
                         ";
 
         await _emailService.NotifyUserAsync(user.Email, subject, message: message);
@@ -126,6 +102,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         userOnDb.FullName = user.FullName;
         userOnDb.Email = user.Email;
         userOnDb.IsAdmin = user.IsAdmin ?? userOnDb.IsAdmin;
+        userOnDb.Modified = DateTime.Now;
 
         var userUpdate = await _repository.UpdateAsync(userOnDb);
         var userResponse = _mapper.Map<UserGetDto>(userUpdate);
@@ -135,52 +112,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
             userResponse);
     }
 
-    public async Task<ResultResponse<UserGetDto>> ChangePasswordAsync(UserChangePasswordDto userChangePasswordDto)
-    {
-        var response = new ResultResponse<UserGetDto>();
-        var userOnDb = await _repository.GetByIdAsync(userChangePasswordDto.Id);
-        if (userOnDb is null)
-        {
-            var message = "User not found";
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), message);
-        }
-        
-        
-        var verifyPass = _hasherService.VerifyHashedPassword(userChangePasswordDto.OldPassword, userOnDb.Password);
-        if (!verifyPass)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), $"Old Password invalid");
-        
-        var passwordHasher = _hasherService.HashPassword(userChangePasswordDto.NewPassword);
-        userOnDb.Password = passwordHasher;
-        
-        var userUpdated = await _repository.UpdateAsync(userOnDb);
-        var userResponse = _mapper.Map<UserGetDto>(userOnDb);
-        
-        return response.Success(HttpStatusCode.OK.GetHashCode(), userResponse);
-    }
-
-    public async Task<ResultResponse<UserGetDto>> ConfirmAccountAsync(UserConfirmAccountDto userConfirmAccountDto)
-    {
-        var response = new ResultResponse<UserGetDto>();
-        var userOnDb = await _repository.GetByIdAsync(userConfirmAccountDto.Id);
-        if (userOnDb is null)
-        {
-            var message = "User not found";
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), message);
-        }
-
-        if (userOnDb.CodeConfirmedAccount != userConfirmAccountDto.Code)
-        {
-            var message = "Invalid code";
-            return response.Fail(HttpStatusCode.BadRequest.GetHashCode(), message);
-        }
-
-        userOnDb.ConfirmedAccount = true;
-        await _repository.UpdateAsync(userOnDb);
-        var userResponse = _mapper.Map<UserGetDto>(userOnDb);
-        return response.Success(HttpStatusCode.OK.GetHashCode(), userResponse);
-    }
-
+    
     public async Task<ResultResponse<bool>> DeactiveAsync(long id)
     {
         var response = new ResultResponse<bool>();
@@ -198,7 +130,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         return response.Success(HttpStatusCode.NoContent.GetHashCode(), true);
     }
 
-    private static string GenerateRandomCode()
+    public string GenerateRandomConfirmationCode()
     {
         const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         char[] result = new char[8];
