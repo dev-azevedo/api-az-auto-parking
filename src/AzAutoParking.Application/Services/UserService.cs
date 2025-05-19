@@ -38,10 +38,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         var item = await _repository.GetByIdAsync(id);
 
         if (item is null)
-        {
-            var message = "User not found";
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), message);
-        }
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), "User not found");
 
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
@@ -125,6 +122,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         }
 
         userOnDb.IsActive = false;
+        userOnDb.Modified = DateTime.Now;
         await _repository.UpdateAsync(userOnDb);
 
         return response.Success(HttpStatusCode.NoContent.GetHashCode(), true);

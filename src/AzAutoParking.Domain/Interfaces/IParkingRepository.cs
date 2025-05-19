@@ -2,4 +2,7 @@
 
 namespace AzAutoParking.Domain.Interfaces;
 
-public interface IParkingRepository : IGenericRepository<Parking> {}
+public interface IParkingRepository : IGenericRepository<Parking>
+{
+    Task<Parking?> GetByParkingNumberAsync(int parkingNumber);
+}
