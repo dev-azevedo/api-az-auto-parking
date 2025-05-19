@@ -28,8 +28,8 @@ public static class DependencyInjectionSetup
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IParkingService, ParkingService>();
         services.AddSingleton<IJwtService, JwtService>();
-        services.AddSingleton<IParkingService, ParkingService>();
         
         var emailSmtpHost = configuration["Email:SmtpHost"] ?? throw new ArgumentNullException("Email:SmtpHost");
         services.AddSingleton<ISmtpEmailService>(provider =>

@@ -228,7 +228,7 @@
 						"header": [
 							{
 								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEiLCJmdWxsbmFtZSI6Ikpob25hdGFuIEF6ZXZlZG8iLCJlbWFpbCI6Impob3cuaC5hemV2ZWRvQGdtYWlsLmNvbSIsImlzQWRtaW4iOiJGYWxzZSIsInJlc2V0UGFzc3dvcmQiOiJUcnVlIiwiZXhwIjoxNzQ3NDE4OTU1LCJpc3MiOiJhcGktYXotYXV0by1wYXJraW5nIiwiYXVkIjoiYXBpLWF6LWF1dG8tcGFya2luZy1jbGllbnQifQ.lcyp7VTxPNSVj8qLn_5Zml6oF94_20aOCmgLWHYucKA",
+								"value": "Bearer {{token}}",
 								"type": "text"
 							}
 						],
@@ -360,6 +360,174 @@
 								"auth",
 								"password",
 								"reset"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Parking",
+			"item": [
+				{
+					"name": "GetAll",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/parkings/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"parkings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetById",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/parkings/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"parkings",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetByParkingNumber",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/parkings/number/10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"parkings",
+								"number",
+								"10"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"parkingNumber\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/parkings/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"parkings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"parkingNumber\": 1,\r\n    \"available\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/parkings/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"parkings",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactive",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/parkings/1",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"parkings",
+								"1"
 							]
 						}
 					},

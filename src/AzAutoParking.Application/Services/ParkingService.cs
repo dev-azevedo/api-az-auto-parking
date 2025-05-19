@@ -43,7 +43,7 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
             _mapper.Map<ParkingGetDto>(item));
     }
 
-    public async Task<ResultResponse<ParkingGetDto>> GetByNumberSpaceAsync(int numberSpace)
+    public async Task<ResultResponse<ParkingGetDto>> GetByParkingNumberAsync(int numberSpace)
     {
         var response = new ResultResponse<ParkingGetDto>();
         var item = await _repository.GetByParkingNumberAsync(numberSpace);
