@@ -20,6 +20,7 @@ public static class DependencyInjectionSetup
     {
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IParkingRepository, ParkingRepository>();
     }
 
     private static void AddServices(this IServiceCollection services, IConfiguration configuration)
