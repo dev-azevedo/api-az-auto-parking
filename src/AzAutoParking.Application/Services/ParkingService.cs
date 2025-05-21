@@ -2,7 +2,6 @@
 using AutoMapper;
 using AzAutoParking.Application.Dto;
 using AzAutoParking.Application.Dto.Parking;
-using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Response;
 using AzAutoParking.Domain.Interfaces;
@@ -36,7 +35,7 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         var item = await _repository.GetByIdAsync(id);
 
         if (item is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), "Parking not found");
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
 
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
@@ -49,7 +48,7 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         var item = await _repository.GetByParkingNumberAsync(numberSpace);
 
         if (item is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), "Parking not found");
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
 
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
@@ -62,7 +61,7 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         var parkingOnDb = await _repository.GetByParkingNumberAsync(parking.ParkingNumber);
         
         if(parkingOnDb is not null)
-            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), "Parking number already exists");
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Parking.ParkingNumberExists);
 
         var parkingModel = _mapper.Map<Parking>(parking);
         
@@ -79,12 +78,12 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         var response = new ResultResponse<ParkingGetDto>();
         var parkingOnDb = await _repository.GetByIdAsync(parking.Id);
         if (parkingOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), "Parking not found");
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
         
         var parkingOnDbWithParkingNumber = await _repository.GetByParkingNumberAsync(parking.ParkingNumber);
         
         if(parkingOnDbWithParkingNumber is not null && parkingOnDb.Id != parkingOnDbWithParkingNumber.Id)
-            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), "Parking number already exists");
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Parking.ParkingNumberExists);
         
         parkingOnDb.ParkingNumber = parking.ParkingNumber;
         parkingOnDb.Available = parking.Available;
@@ -104,7 +103,7 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         var parkingOnDb = await _repository.GetByIdAsync(id);
 
         if (parkingOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), "Parking not found");
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
 
         parkingOnDb.IsActive = false;
         parkingOnDb.Modified = DateTime.Now;

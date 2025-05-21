@@ -5,7 +5,7 @@ public class ResultResponse<T>
     public int StatusCode { get; set; }
     public bool IsSuccess { get; set; }
     public T Data { get; set; }
-    public string? Message { get; set; }
+    public LocalizedMessage? Message { get; set; }
 
     public ResultResponse<T> Success(int statusCode, T data)
     {
@@ -17,7 +17,7 @@ public class ResultResponse<T>
         };
     }
 
-    public ResultResponse<T> Fail(int statusCode, string message)
+    public ResultResponse<T> Fail(int statusCode, LocalizedMessage message)
     {
         return new ResultResponse<T>
         {
