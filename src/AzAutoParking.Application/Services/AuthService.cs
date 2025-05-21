@@ -31,7 +31,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
             return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), ErrorMessages.Auth.InvalidEmailOrPassword);
 
         if(!userOnDb.ConfirmedAccount)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), ErrorMessages.Auth.UnconfirmedAccount);
+            return response.Fail(HttpStatusCode.Forbidden.GetHashCode(), ErrorMessages.Auth.UnconfirmedAccount);
 
 
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
@@ -59,7 +59,12 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         
         var userUpdate = await _userRepository.UpdateAsync(userOnDb);
         
-        return response.Success(HttpStatusCode.OK.GetHashCode(), _mapper.Map<UserGetDto>(userUpdate));
+        var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
+
+        var userDto = _mapper.Map<UserGetDto>(userOnDb);
+        userDto.Token = token;
+        
+        return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
     }
     
     public async Task<ResultResponse<UserGetDto>> VerifyCode(AuthConfirmCodeDto authConfirmCodeDto)
