@@ -87,7 +87,7 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         
         parkingOnDb.ParkingNumber = parking.ParkingNumber;
         parkingOnDb.Available = parking.Available;
-        parkingOnDb.Modified = DateTime.Now;
+        parkingOnDb.IsModified();
 
         var parkingUpdate = await _repository.UpdateAsync(parkingOnDb);
         var parkingResponse = _mapper.Map<ParkingGetDto>(parkingUpdate);
@@ -105,8 +105,8 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         if (parkingOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
 
-        parkingOnDb.IsActive = false;
-        parkingOnDb.Modified = DateTime.Now;
+        parkingOnDb.Deactivate();
+        parkingOnDb.IsModified();
         
         await _repository.UpdateAsync(parkingOnDb);
 
