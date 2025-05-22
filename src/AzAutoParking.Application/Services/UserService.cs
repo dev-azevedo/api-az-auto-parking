@@ -75,7 +75,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         var subject = "Bem-vindo ao AzAutoParking";
         var message = $@"
                         <p>Olá {userModel.FullName}, seja bem-vindo(a)</p>
-                        <p>Confirme sua conta aqui: {userModel.ConfirmationCode}</p>
+                        <p>Utilize esse código para verificar sua conta: {userModel.ConfirmationCode}</p>
                         ";
 
         await _emailService.NotifyUserAsync(user.Email, subject, message: message);
@@ -96,7 +96,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         userOnDb.FullName = user.FullName;
         userOnDb.Email = user.Email;
         userOnDb.IsAdmin = user.IsAdmin ?? userOnDb.IsAdmin;
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.IsModified();
 
         var userUpdate = await _repository.UpdateAsync(userOnDb);
         var userResponse = _mapper.Map<UserGetDto>(userUpdate);
@@ -115,8 +115,8 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         if (userOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
 
-        userOnDb.IsActive = false;
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.Deactivate();
+        userOnDb.IsModified();
         await _repository.UpdateAsync(userOnDb);
 
         return response.Success(HttpStatusCode.NoContent.GetHashCode(), true);

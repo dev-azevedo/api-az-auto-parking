@@ -55,7 +55,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         var userOnDb = userResponse.Data;
         userOnDb.ConfirmedAccount = true;
         userOnDb.ConfirmationCode = null;
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.IsModified();
         
         var userUpdate = await _userRepository.UpdateAsync(userOnDb);
         
@@ -80,7 +80,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
 
         var userOnDb = userResponse.Data;
         userOnDb.ConfirmationCode = null;
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.IsModified();
         
         await _userRepository.UpdateAsync(userOnDb);
         
@@ -98,13 +98,9 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         var userOnDb = await _userRepository.GetByEmailAsync(email);
         if (userOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
-
-        if (userOnDb.ConfirmationCode is not null)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), ErrorMessages.Auth.UnconfirmedAccount);
-        
         
         userOnDb.ConfirmationCode = _userService.GenerateRandomConfirmationCode();
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.IsModified();
         
         await _userRepository.UpdateAsync(userOnDb);
         
@@ -129,7 +125,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         
         var passwordHasher = _hasherService.HashPassword(authResetPasswordDto.NewPassword);
         userOnDb.Password = passwordHasher;
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.IsModified();
         
         var userUpdated = await _userRepository.UpdateAsync(userOnDb);
         var userResponse = _mapper.Map<UserGetDto>(userUpdated);
@@ -151,7 +147,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         
         var passwordHasher = _hasherService.HashPassword(authChangePasswordDto.NewPassword);
         userOnDb.Password = passwordHasher;
-        userOnDb.Modified = DateTime.Now;
+        userOnDb.IsModified();
         
         var userUpdated = await _userRepository.UpdateAsync(userOnDb);
         var userResponse = _mapper.Map<UserGetDto>(userUpdated);

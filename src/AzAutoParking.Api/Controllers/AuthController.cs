@@ -56,14 +56,12 @@ namespace AzAutoParking.Api.Controllers
         }
         
         [HttpPost("password/forgot")]
-        public async Task<IActionResult> ForgotPasswordAsync([FromBody] string email)
+        public async Task<IActionResult> ForgotPasswordAsync([FromBody] AuthForgotPasswordDto authForgotPasswordDto)
         {
             try
             {
-                if (string.IsNullOrEmpty(email))
-                    return StatusCode(HttpStatusCode.BadRequest.GetHashCode(), "email is null");
                 
-                var response = await _service.ForgotPasswordAsync(email);
+                var response = await _service.ForgotPasswordAsync(authForgotPasswordDto.Email);
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)

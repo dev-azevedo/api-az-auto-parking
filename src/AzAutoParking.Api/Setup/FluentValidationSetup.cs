@@ -16,6 +16,7 @@ public static class FluentValidationSetup
         services.AddValidatorsFromAssemblyContaining<AuthConfirmCodeValidator>();
         services.AddValidatorsFromAssemblyContaining<AuthChangePasswordValidator>();
         services.AddValidatorsFromAssemblyContaining<AuthResetPasswordValidator>();
+        services.AddValidatorsFromAssemblyContaining<AuthForgotPasswordValidator>();
         
         // User
         services.AddValidatorsFromAssemblyContaining<UserCreateValidator>();
