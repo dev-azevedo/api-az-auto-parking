@@ -1,12 +1,12 @@
 ﻿using System.Text.RegularExpressions;
-using AzAutoParking.Application.Dto.User;
+using AzAutoParking.Application.Dto.Auth;
 using FluentValidation;
 
-namespace AzAutoParking.Application.Validators.User;
+namespace AzAutoParking.Application.Validators.Auth;
 
-public class UserCreateValidator : AbstractValidator<UserCreateDto>
+public class AuthSignUpValidator : AbstractValidator<AuthSignUpDto>
 {
-    public UserCreateValidator()
+    public AuthSignUpValidator()
     {
         RuleFor(u => u.FullName)
             .NotEmpty().WithMessage("Nome completo é obrigatório")

@@ -1,6 +1,5 @@
 using System.Net;
 using AzAutoParking.Application.Dto.Auth;
-using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +17,21 @@ namespace AzAutoParking.Api.Controllers
         {
             try
             {
-                var response = await _service.SignIn(authSignInDto);
+                var response = await _service.SignInAsync(authSignInDto);
+                return StatusCode(response.StatusCode, response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
+            }
+        }
+        
+        [HttpPost("signup")]
+        public async Task<IActionResult> SignUpAsync(AuthSignUpDto authSignUpDto)
+        {
+            try
+            {
+                var response = await _service.SignUpAsync(authSignUpDto);
                 return StatusCode(response.StatusCode, response);
             }
             catch (Exception ex)

@@ -19,7 +19,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
     private readonly IPasswordHasherService _hasherService = new PasswordHasherService();
     
     
-    public async Task<ResultResponse<UserGetDto>> SignIn(AuthSignInDto authSignInDto)
+    public async Task<ResultResponse<UserGetDto>> SignInAsync(AuthSignInDto authSignInDto)
     {
         var response = new ResultResponse<UserGetDto>();
         var userOnDb = await _userRepository.GetByEmailAsync(authSignInDto.Email);
@@ -41,7 +41,36 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
 
         return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
     }
-    
+
+    public async Task<ResultResponse<UserGetDto>> SignUpAsync(AuthSignUpDto user)
+    {
+        var response = new ResultResponse<UserGetDto>();
+        var userOnDb = await _userRepository.GetByEmailAsync(user.Email);
+
+        if (userOnDb is not null)
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Auth.EmailAlreadyExists);
+
+        var passwordHasher = _hasherService.HashPassword(user.Password);
+        var userModel = _mapper.Map<User>(user);
+        userModel.Password = passwordHasher;
+        userModel.ConfirmationCode = _userService.GenerateRandomConfirmationCode();
+        
+        var userCreated = await _userRepository.CreateAsync(userModel);
+        var userResponse = _mapper.Map<UserGetDto>(userCreated);
+
+        var subject = "Bem-vindo ao AzAutoParking";
+        var message = $@"
+                        <p>Olá {userModel.FullName}, seja bem-vindo(a)</p>
+                        <p>Utilize esse código para verificar sua conta: {userModel.ConfirmationCode}</p>
+                        ";
+
+        await _emailService.NotifyUserAsync(user.Email, subject, message: message);
+
+        return response.Success(
+            HttpStatusCode.Created.GetHashCode(),
+            userResponse);
+    }
+
     public async Task<ResultResponse<UserGetDto>> ConfirmAccountAsync(AuthConfirmCodeDto authConfirmCodeDto)
     {
         var response = new ResultResponse<UserGetDto>();
@@ -61,7 +90,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
 
-        var userDto = _mapper.Map<UserGetDto>(userOnDb);
+        var userDto = _mapper.Map<UserGetDto>(userUpdate);
         userDto.Token = token;
         
         return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
@@ -127,8 +156,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         userOnDb.Password = passwordHasher;
         userOnDb.IsModified();
         
-        var userUpdated = await _userRepository.UpdateAsync(userOnDb);
-        var userResponse = _mapper.Map<UserGetDto>(userUpdated);
+        await _userRepository.UpdateAsync(userOnDb);
         
         return response.Success(HttpStatusCode.NoContent.GetHashCode(), true);
     }

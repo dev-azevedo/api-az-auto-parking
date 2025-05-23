@@ -55,35 +55,7 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
 
         return response.Success(HttpStatusCode.OK.GetHashCode(), _mapper.Map<UserGetDto>(item));
     }
-
-    public async Task<ResultResponse<UserGetDto>> CreateAsync(UserCreateDto user)
-    {
-        var response = new ResultResponse<UserGetDto>();
-        var userOnDb = await _repository.GetByEmailAsync(user.Email);
-
-        if (userOnDb is not null)
-            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Auth.EmailAlreadyExists);
-
-        var passwordHasher = _hasherService.HashPassword(user.Password);
-        var userModel = _mapper.Map<User>(user);
-        userModel.Password = passwordHasher;
-        userModel.ConfirmationCode = GenerateRandomConfirmationCode();
-        
-        var userCreated = await _repository.CreateAsync(userModel);
-        var userResponse = _mapper.Map<UserGetDto>(userCreated);
-
-        var subject = "Bem-vindo ao AzAutoParking";
-        var message = $@"
-                        <p>Olá {userModel.FullName}, seja bem-vindo(a)</p>
-                        <p>Utilize esse código para verificar sua conta: {userModel.ConfirmationCode}</p>
-                        ";
-
-        await _emailService.NotifyUserAsync(user.Email, subject, message: message);
-
-        return response.Success(
-            HttpStatusCode.Created.GetHashCode(),
-            userResponse);
-    }
+    
 
     public async Task<ResultResponse<UserGetDto>> UpdateAsync(UserUpdateDto user)
     {

@@ -43,22 +43,6 @@ namespace AzAutoParking.Api.Controllers
                 return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
             }
         }
-
-      
-        
-        [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] UserCreateDto userCreateDto)
-        {
-            try
-            {
-                var response = await _service.CreateAsync(userCreateDto);
-                return StatusCode(response.StatusCode, response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(HttpStatusCode.InternalServerError.GetHashCode(), ex.Message);
-            }
-        }
         
         [Authorize]
         [HttpPut]
