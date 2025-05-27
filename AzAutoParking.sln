@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Application",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Api", "src\AzAutoParking.Api\AzAutoParking.Api.csproj", "{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AzAutoParking.Tests", "tests\AzAutoParking.Tests\AzAutoParking.Tests.csproj", "{F2CCAAEF-57DE-4A88-9E42-F8B9F0E5EAF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53A36EAE-4002-4DE9-ADEA-F3E47379BFD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2CCAAEF-57DE-4A88-9E42-F8B9F0E5EAF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2CCAAEF-57DE-4A88-9E42-F8B9F0E5EAF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2CCAAEF-57DE-4A88-9E42-F8B9F0E5EAF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2CCAAEF-57DE-4A88-9E42-F8B9F0E5EAF0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

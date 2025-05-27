@@ -1,6 +1,7 @@
 ﻿using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Services;
 using AzAutoParking.Domain.Interfaces;
+using AzAutoParking.Domain.Models;
 using AzAutoParking.Infra.Data.Repository;
 using AzAutoParking.Infra.ExternalServices;
 using Mapster;
@@ -14,7 +15,8 @@ public static class DependencyInjectionSetup
     public static void AddDiSetup(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddRepositories();
-        services.AddServices(configuration);
+        services.AddServices();
+        services.AddConfigureEnvs(configuration);
     }
 
     private static void AddRepositories(this IServiceCollection services)
@@ -22,16 +24,20 @@ public static class DependencyInjectionSetup
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IParkingRepository, ParkingRepository>();
+        services.AddScoped<ITypeAutomobileRepository, TypeAutomobileRepository>();
     }
 
-    private static void AddServices(this IServiceCollection services, IConfiguration configuration)
+    private static void AddServices(this IServiceCollection services)
     {
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IParkingService, ParkingService>();
         services.AddSingleton<IJwtService, JwtService>();
-        
+    }
+
+    private static void AddConfigureEnvs(this IServiceCollection services, IConfiguration configuration)
+    {
         var emailSmtpHost = configuration["Email:SmtpHost"] ?? throw new ArgumentNullException("Email:SmtpHost");
         services.AddSingleton<ISmtpEmailService>(provider =>
             new SmtpEmailService(
