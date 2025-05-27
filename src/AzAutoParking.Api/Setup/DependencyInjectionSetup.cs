@@ -1,9 +1,11 @@
 ﻿using AzAutoParking.Application.Interfaces;
-using AzAutoParking.Application.Mapper;
 using AzAutoParking.Application.Services;
 using AzAutoParking.Domain.Interfaces;
 using AzAutoParking.Infra.Data.Repository;
 using AzAutoParking.Infra.ExternalServices;
+using Mapster;
+using MapsterMapper;
+
 
 namespace AzAutoParking.Api.Setup;
 
@@ -13,7 +15,6 @@ public static class DependencyInjectionSetup
     {
         services.AddRepositories();
         services.AddServices(configuration);
-        services.AddAutoMapper(typeof(AutoMapperConfig));
     }
 
     private static void AddRepositories(this IServiceCollection services)

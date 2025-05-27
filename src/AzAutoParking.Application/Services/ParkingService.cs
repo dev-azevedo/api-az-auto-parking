@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using AutoMapper;
+using Mapster;
 using AzAutoParking.Application.Dto;
 using AzAutoParking.Application.Dto.Parking;
 using AzAutoParking.Application.Interfaces;
@@ -9,20 +9,20 @@ using AzAutoParking.Domain.Models;
 
 namespace AzAutoParking.Application.Services;
 
-public class ParkingService(IParkingRepository repository, IMapper mapper) : IParkingService
+public class ParkingService(IParkingRepository repository) : IParkingService
 {
     private readonly IParkingRepository _repository = repository;
-    private readonly IMapper _mapper = mapper;
     
     public async Task<ResultResponse<PaginationDto<ParkingGetDto>>> GetAllAsync(int skip, int take)
     {
         var response = new ResultResponse<PaginationDto<ParkingGetDto>>();
 
         var (items, totalItems) = await _repository.GetAllAsync(skip, take);
-        var itemsResult = _mapper.Map<List<ParkingGetDto>>(items);
+        var parkingDto = items.Adapt<List<ParkingGetDto>>();
+        
         var result = new PaginationDto<ParkingGetDto>
         {
-            Items = itemsResult,
+            Items = parkingDto,
             TotalItems = totalItems,
         };
 
@@ -32,27 +32,29 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
     public async Task<ResultResponse<ParkingGetDto>> GetByIdAsync(long id)
     {
         var response = new ResultResponse<ParkingGetDto>();
-        var item = await _repository.GetByIdAsync(id);
+        var parkingOnDb = await _repository.GetByIdAsync(id);
 
-        if (item is null)
+        if (parkingOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
-
+        
+        var parkingDto = parkingOnDb.Adapt<ParkingGetDto>();
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
-            _mapper.Map<ParkingGetDto>(item));
+            parkingDto);
     }
 
     public async Task<ResultResponse<ParkingGetDto>> GetByParkingNumberAsync(int numberSpace)
     {
         var response = new ResultResponse<ParkingGetDto>();
-        var item = await _repository.GetByParkingNumberAsync(numberSpace);
+        var parkingOnDb = await _repository.GetByParkingNumberAsync(numberSpace);
 
-        if (item is null)
+        if (parkingOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
-
+        
+        var parkingDto = parkingOnDb.Adapt<ParkingGetDto>();
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
-            _mapper.Map<ParkingGetDto>(item));
+            parkingDto);
     }
 
     public async Task<ResultResponse<ParkingGetDto>> CreateAsync(ParkingCreateDto parking)
@@ -63,14 +65,14 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         if(parkingOnDb is not null)
             return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Parking.ParkingNumberExists);
 
-        var parkingModel = _mapper.Map<Parking>(parking);
+        var parkingModel = parking.Adapt<Parking>();
         
         var parkingCreated = await _repository.CreateAsync(parkingModel);
-        var parkingResponse = _mapper.Map<ParkingGetDto>(parkingCreated);
+        var parkingDto = parkingCreated.Adapt<ParkingGetDto>();
 
         return response.Success(
             HttpStatusCode.Created.GetHashCode(),
-            parkingResponse);
+            parkingDto);
     }
 
     public async Task<ResultResponse<ParkingGetDto>> UpdateAsync(ParkingUpdateDto parking)
@@ -90,11 +92,11 @@ public class ParkingService(IParkingRepository repository, IMapper mapper) : IPa
         parkingOnDb.IsModified();
 
         var parkingUpdate = await _repository.UpdateAsync(parkingOnDb);
-        var parkingResponse = _mapper.Map<ParkingGetDto>(parkingUpdate);
+        var parkingDto = parkingUpdate.Adapt<ParkingGetDto>();
 
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
-            parkingResponse);
+            parkingDto);
     }
 
     public async Task<ResultResponse<bool>> DeactiveAsync(long id)

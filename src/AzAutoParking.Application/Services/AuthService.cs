@@ -1,17 +1,16 @@
 ﻿using System.Net;
-using AutoMapper;
 using AzAutoParking.Application.Dto.Auth;
 using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Response;
 using AzAutoParking.Domain.Interfaces;
 using AzAutoParking.Domain.Models;
+using Mapster;
 
 namespace AzAutoParking.Application.Services;
 
-public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository userRepository, IUserService userService, IEmailService emailService) : IAuthService
+public class AuthService(IJwtService jwtService, IUserRepository userRepository, IUserService userService, IEmailService emailService) : IAuthService
 {
-    private readonly IMapper _mapper = mapper;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IJwtService _jwtService = jwtService;
     private readonly IUserService _userService = userService;
@@ -36,7 +35,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
 
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
 
-        var userDto = _mapper.Map<UserGetDto>(userOnDb);
+        var userDto = userOnDb.Adapt<UserGetDto>();
         userDto.Token = token;
 
         return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
@@ -51,12 +50,12 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
             return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Auth.EmailAlreadyExists);
 
         var passwordHasher = _hasherService.HashPassword(user.Password);
-        var userModel = _mapper.Map<User>(user);
+        var userModel = user.Adapt<User>();
         userModel.Password = passwordHasher;
         userModel.ConfirmationCode = _userService.GenerateRandomConfirmationCode();
         
         var userCreated = await _userRepository.CreateAsync(userModel);
-        var userResponse = _mapper.Map<UserGetDto>(userCreated);
+        var userDto = userCreated.Adapt<UserGetDto>();
 
         var subject = "Bem-vindo ao AzAutoParking";
         var message = $@"
@@ -68,7 +67,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
 
         return response.Success(
             HttpStatusCode.Created.GetHashCode(),
-            userResponse);
+            userDto);
     }
 
     public async Task<ResultResponse<UserGetDto>> ConfirmAccountAsync(AuthConfirmCodeDto authConfirmCodeDto)
@@ -90,7 +89,7 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
 
-        var userDto = _mapper.Map<UserGetDto>(userUpdate);
+        var userDto = userUpdate.Adapt<UserGetDto>();
         userDto.Token = token;
         
         return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
@@ -115,10 +114,10 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin, true, 1);
 
-        var userDto = _mapper.Map<UserGetDto>(userOnDb);
+        var userDto = userOnDb.Adapt<UserGetDto>();
         userDto.Token = token;
         
-        return response.Success(HttpStatusCode.OK.GetHashCode(), _mapper.Map<UserGetDto>(userDto));
+        return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
     }
     
     public async Task<ResultResponse<bool>> ForgotPasswordAsync(string email)
@@ -178,9 +177,9 @@ public class AuthService(IMapper mapper, IJwtService jwtService, IUserRepository
         userOnDb.IsModified();
         
         var userUpdated = await _userRepository.UpdateAsync(userOnDb);
-        var userResponse = _mapper.Map<UserGetDto>(userUpdated);
+        var userDto = userUpdated.Adapt<UserGetDto>();
         
-        return response.Success(HttpStatusCode.OK.GetHashCode(), userResponse);
+        return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
     }
 
     

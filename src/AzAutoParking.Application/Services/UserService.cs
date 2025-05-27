@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using AutoMapper;
+using Mapster;
 using AzAutoParking.Application.Dto;
 using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
@@ -9,11 +9,10 @@ using AzAutoParking.Domain.Models;
 
 namespace AzAutoParking.Application.Services;
 
-public class UserService(IUserRepository repository, IMapper mapper, IJwtService jwtService, IEmailService emailService)
+public class UserService(IUserRepository repository, IJwtService jwtService, IEmailService emailService)
     : IUserService
 {
     private readonly IUserRepository _repository = repository;
-    private readonly IMapper _mapper = mapper;
     private readonly IEmailService _emailService = emailService;
     private readonly IPasswordHasherService _hasherService = new PasswordHasherService();
 
@@ -22,10 +21,11 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         var response = new ResultResponse<PaginationDto<UserGetDto>>();
 
         var (items, totalItems) = await _repository.GetAllAsync(skip, take);
-        var itemsResult = _mapper.Map<List<UserGetDto>>(items);
+        var userDto = items.Adapt<List<UserGetDto>>();
+        
         var result = new PaginationDto<UserGetDto>
         {
-            Items = itemsResult,
+            Items = userDto,
             TotalItems = totalItems,
         };
 
@@ -35,25 +35,28 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
     public async Task<ResultResponse<UserGetDto>> GetByIdAsync(long id)
     {
         var response = new ResultResponse<UserGetDto>();
-        var item = await _repository.GetByIdAsync(id);
+        var userOnDb = await _repository.GetByIdAsync(id);
 
-        if (item is null)
+        if (userOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
-
+        
+        var userDto = userOnDb.Adapt<UserGetDto>();
+        
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
-            _mapper.Map<UserGetDto>(item));
+            userDto);
     }
 
     public async Task<ResultResponse<UserGetDto>> GetByEmailAsync(string email)
     {
         var response = new ResultResponse<UserGetDto>();
-        var item = await _repository.GetByEmailAsync(email);
+        var userOnDb = await _repository.GetByEmailAsync(email);
 
-        if (item is null)
+        if (userOnDb is null)
             return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
-
-        return response.Success(HttpStatusCode.OK.GetHashCode(), _mapper.Map<UserGetDto>(item));
+        
+        var userDto = userOnDb.Adapt<UserGetDto>();
+        return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
     }
     
 
@@ -71,11 +74,11 @@ public class UserService(IUserRepository repository, IMapper mapper, IJwtService
         userOnDb.IsModified();
 
         var userUpdate = await _repository.UpdateAsync(userOnDb);
-        var userResponse = _mapper.Map<UserGetDto>(userUpdate);
+        var userDto = userUpdate.Adapt<UserGetDto>();
 
         return response.Success(
             HttpStatusCode.OK.GetHashCode(),
-            userResponse);
+            userDto);
     }
 
     
