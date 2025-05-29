@@ -1,4 +1,5 @@
 ﻿using AzAutoParking.Domain.Models;
+using AzAutoParking.Infra.Data.Context.FluentApi;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzAutoParking.Infra.Data.Context;
@@ -11,12 +12,15 @@ public class AppDbContext : DbContext
     public DbSet<User> Users {get; set;}
     public DbSet<Parking> Parkings {get; set;}
     public DbSet<Automobile> Automobiles {get; set;}
-    public DbSet<Reservation> Reservations {get; set;}
+    public DbSet<ParkingSession> Reservations {get; set;}
     public DbSet<PriceParkingMinute> PriceParkingMinutes {get; set;}
-    public DbSet<TypeAutomobile> TypeAutomobiles {get; set;}
     public DbSet<Log> Logs {get; set;}
-    
-    
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new ParkingConfiguration());
+    }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (!optionsBuilder.IsConfigured)

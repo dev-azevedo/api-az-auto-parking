@@ -24,7 +24,6 @@ public static class DependencyInjectionSetup
         services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IParkingRepository, ParkingRepository>();
-        services.AddScoped<ITypeAutomobileRepository, TypeAutomobileRepository>();
     }
 
     private static void AddServices(this IServiceCollection services)

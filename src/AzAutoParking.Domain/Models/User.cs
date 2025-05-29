@@ -9,7 +9,7 @@ public class User : BaseModel
     public string? ConfirmationCode { get; set; }
     public bool IsAdmin { get; set; } = false;
     
-    public List<Reservation>? Reservations {get; set;}
+    public List<ParkingSession>? ParkingSessions {get; set;}
     public List<Automobile>? Automobile {get; set;}
     public List<Log>? Log {get; set;}
 }

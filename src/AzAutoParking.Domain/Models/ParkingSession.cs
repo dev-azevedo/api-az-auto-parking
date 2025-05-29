@@ -1,6 +1,6 @@
 ﻿namespace AzAutoParking.Domain.Models;
 
-public class Reservation : BaseModel
+public class ParkingSession : BaseModel
 {
     public required long AutomobileId {get; set;}
     public required long ParkingId {get; set;}
