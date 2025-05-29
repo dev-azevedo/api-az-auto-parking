@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace AzAutoParking.Infra.Data.Context.FluentApi;
+namespace AzAutoParking.Infra.Data.FluentApi;
 
-public class ParkingConfiguration : IEntityTypeConfiguration<Parking>
+public class ParkingFluentConfiguration : IEntityTypeConfiguration<Parking>
 {
     public void Configure(EntityTypeBuilder<Parking> builder)
     {

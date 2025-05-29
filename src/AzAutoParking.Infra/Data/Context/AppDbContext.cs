@@ -1,5 +1,5 @@
 ﻿using AzAutoParking.Domain.Models;
-using AzAutoParking.Infra.Data.Context.FluentApi;
+using AzAutoParking.Infra.Data.FluentApi;
 using Microsoft.EntityFrameworkCore;
 
 namespace AzAutoParking.Infra.Data.Context;
@@ -18,8 +18,8 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new ParkingConfiguration());
+        modelBuilder.ApplyConfiguration(new UserFluentConfiguration());
+        modelBuilder.ApplyConfiguration(new ParkingFluentConfiguration());
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
