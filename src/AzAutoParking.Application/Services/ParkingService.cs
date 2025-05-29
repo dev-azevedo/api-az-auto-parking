@@ -35,7 +35,7 @@ public class ParkingService(IParkingRepository repository) : IParkingService
         var parkingOnDb = await _repository.GetByIdAsync(id);
 
         if (parkingOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Parking.NotFound]);
         
         var parkingDto = parkingOnDb.Adapt<ParkingGetDto>();
         return response.Success(
@@ -49,7 +49,7 @@ public class ParkingService(IParkingRepository repository) : IParkingService
         var parkingOnDb = await _repository.GetByParkingNumberAsync(numberSpace);
 
         if (parkingOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Parking.NotFound]);
         
         var parkingDto = parkingOnDb.Adapt<ParkingGetDto>();
         return response.Success(
@@ -63,7 +63,7 @@ public class ParkingService(IParkingRepository repository) : IParkingService
         var parkingOnDb = await _repository.GetByParkingNumberAsync(parking.ParkingNumber);
         
         if(parkingOnDb is not null)
-            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Parking.ParkingNumberExists);
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), [ErrorMessages.Parking.ParkingNumberExists]);
 
         var parkingModel = parking.Adapt<Parking>();
         
@@ -80,12 +80,12 @@ public class ParkingService(IParkingRepository repository) : IParkingService
         var response = new ResultResponse<ParkingGetDto>();
         var parkingOnDb = await _repository.GetByIdAsync(parking.Id);
         if (parkingOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Parking.NotFound]);
         
         var parkingOnDbWithParkingNumber = await _repository.GetByParkingNumberAsync(parking.ParkingNumber);
         
         if(parkingOnDbWithParkingNumber is not null && parkingOnDb.Id != parkingOnDbWithParkingNumber.Id)
-            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Parking.ParkingNumberExists);
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), [ErrorMessages.Parking.ParkingNumberExists]);
         
         parkingOnDb.ParkingNumber = parking.ParkingNumber;
         parkingOnDb.Available = parking.Available;
@@ -105,7 +105,7 @@ public class ParkingService(IParkingRepository repository) : IParkingService
         var parkingOnDb = await _repository.GetByIdAsync(id);
 
         if (parkingOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Parking.NotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Parking.NotFound]);
 
         parkingOnDb.Deactivate();
         parkingOnDb.IsModified();

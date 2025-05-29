@@ -1,6 +1,7 @@
 using System.Net;
 using AzAutoParking.Application.Dto.Auth;
 using AzAutoParking.Application.Interfaces;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

@@ -38,7 +38,8 @@ public class UserService(IUserRepository repository, IJwtService jwtService, IEm
         var userOnDb = await _repository.GetByIdAsync(id);
 
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
+            
         
         var userDto = userOnDb.Adapt<UserGetDto>();
         
@@ -53,7 +54,7 @@ public class UserService(IUserRepository repository, IJwtService jwtService, IEm
         var userOnDb = await _repository.GetByEmailAsync(email);
 
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
         
         var userDto = userOnDb.Adapt<UserGetDto>();
         return response.Success(HttpStatusCode.OK.GetHashCode(), userDto);
@@ -66,7 +67,7 @@ public class UserService(IUserRepository repository, IJwtService jwtService, IEm
         var userOnDb = await _repository.GetByIdAsync(user.Id);
 
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
 
         userOnDb.FullName = user.FullName;
         userOnDb.Email = user.Email;
@@ -88,7 +89,7 @@ public class UserService(IUserRepository repository, IJwtService jwtService, IEm
         var userOnDb = await _repository.GetByIdAsync(id);
 
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
 
         userOnDb.Deactivate();
         userOnDb.IsModified();

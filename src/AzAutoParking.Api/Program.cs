@@ -1,6 +1,8 @@
 using AzAutoParking.Api.Middleware;
 using AzAutoParking.Api.Setup;
-using Microsoft.AspNetCore.Diagnostics;
+using AzAutoParking.Api.Utils;
+using AzAutoParking.Application.Response;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,14 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddEnvSetup();
 builder.Services.AddDbSetup(builder.Configuration);
 builder.Services.AddJwtSetup();
-builder.Services.AddDiSetup(builder.Configuration);
-builder.Services.AddFluentValidationSetup();
 builder.Services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy => policy.RequireClaim("isAdmin", "True")));
+builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
 
 builder.Services.AddOpenApi();
 builder.Services.AddCors();
-builder.Services.AddControllers();
-
+builder.Services.AddControllers(options => options.Filters.Add<CustomValidationFilter>());
+builder.Services.AddFluentValidationSetup();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

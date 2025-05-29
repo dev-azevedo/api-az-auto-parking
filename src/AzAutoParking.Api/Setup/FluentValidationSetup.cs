@@ -9,7 +9,8 @@ public static class FluentValidationSetup
     public static void AddFluentValidationSetup(this IServiceCollection services)
     {
         services.AddFluentValidationAutoValidation();
-        
+        // services.AddFluentValidationClientsideAdapters();
+ 
         // Auth
         services.AddValidatorsFromAssemblyContaining<AuthSignInValidator>();
         services.AddValidatorsFromAssemblyContaining<AuthSignUpValidator>();

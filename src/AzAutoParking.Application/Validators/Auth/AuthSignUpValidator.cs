@@ -1,5 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using AzAutoParking.Application.Dto.Auth;
+using AzAutoParking.Application.Response;
 using FluentValidation;
 
 namespace AzAutoParking.Application.Validators.Auth;
@@ -19,8 +20,11 @@ public class AuthSignUpValidator : AbstractValidator<AuthSignUpDto>
             .EmailAddress().WithMessage("Email não é válido.");
 
         RuleFor(u => u.Password)
-            .NotEmpty().WithMessage("Senha é obrigatório.")
-            .MinimumLength(8).WithMessage("Senha deve ter pelo menos 8 caracteres.")
-            .Equal(c => c.ConfirmedPassword).WithMessage("Senha não coincide com campos confirmar senha.");
+            .NotEmpty()
+            .WithMessage($"{ErrorMessages.System.RequiredPassword.En} | {ErrorMessages.System.RequiredPassword.PtBr}")
+            .MinimumLength(8)
+            .WithMessage($"{ErrorMessages.System.LongPassword.En} | {ErrorMessages.System.LongPassword.PtBr}")
+            .Equal(c => c.ConfirmedPassword)
+            .WithMessage($"{ErrorMessages.System.NotMatchConfirmPassword.En} | {ErrorMessages.System.NotMatchConfirmPassword.PtBr}");
     }
 }

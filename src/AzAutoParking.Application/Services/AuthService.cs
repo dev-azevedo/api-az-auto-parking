@@ -23,14 +23,14 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var response = new ResultResponse<UserGetDto>();
         var userOnDb = await _userRepository.GetByEmailAsync(authSignInDto.Email);
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.BadRequest.GetHashCode(), ErrorMessages.Auth.InvalidEmailOrPassword);
+            return response.Fail(HttpStatusCode.BadRequest.GetHashCode(), [ErrorMessages.Auth.InvalidEmailOrPassword]);
         
         var verifyPass = _hasherService.VerifyHashedPassword(authSignInDto.Password, userOnDb.Password);
         if (!verifyPass)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), ErrorMessages.Auth.InvalidEmailOrPassword);
+            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), [ErrorMessages.Auth.InvalidEmailOrPassword]);
 
         if(!userOnDb.ConfirmedAccount)
-            return response.Fail(HttpStatusCode.Forbidden.GetHashCode(), ErrorMessages.Auth.UnconfirmedAccount);
+            return response.Fail(HttpStatusCode.Forbidden.GetHashCode(), [ErrorMessages.Auth.UnconfirmedAccount]);
 
 
         var token = _jwtService.GenerateJwtToken(userOnDb.Id, userOnDb.Email, userOnDb.FullName, userOnDb.IsAdmin);
@@ -47,7 +47,7 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var userOnDb = await _userRepository.GetByEmailAsync(user.Email);
 
         if (userOnDb is not null)
-            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), ErrorMessages.Auth.EmailAlreadyExists);
+            return response.Fail(HttpStatusCode.Conflict.GetHashCode(), [ErrorMessages.Auth.EmailAlreadyExists]);
 
         var passwordHasher = _hasherService.HashPassword(user.Password);
         var userModel = user.Adapt<User>();
@@ -76,8 +76,8 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var userResponse = await _validateCode(authConfirmCodeDto);
         if (!userResponse.IsSuccess)
         {
-            var message = userResponse.Message ?? ErrorMessages.Auth.InvalidCode;
-            return response.Fail(userResponse.StatusCode, message);
+            var messages = userResponse.Messages ?? [ErrorMessages.Auth.InvalidCode];
+            return response.Fail(userResponse.StatusCode, messages);
         }
         
         var userOnDb = userResponse.Data;
@@ -102,8 +102,8 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
        
         if (!userResponse.IsSuccess)
         {
-            var message = userResponse.Message ?? ErrorMessages.Auth.InvalidCode;
-            return response.Fail(userResponse.StatusCode, message);
+            var messages = userResponse.Messages ?? [ErrorMessages.Auth.InvalidCode];
+            return response.Fail(userResponse.StatusCode, messages);
         }
 
         var userOnDb = userResponse.Data;
@@ -125,7 +125,7 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var response = new ResultResponse<bool>();
         var userOnDb = await _userRepository.GetByEmailAsync(email);
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
         
         userOnDb.ConfirmationCode = _userService.GenerateRandomConfirmationCode();
         userOnDb.IsModified();
@@ -149,7 +149,7 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var userOnDb = await _userRepository.GetByIdAsync(authResetPasswordDto.Id);
         
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
         
         var passwordHasher = _hasherService.HashPassword(authResetPasswordDto.NewPassword);
         userOnDb.Password = passwordHasher;
@@ -165,12 +165,12 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var response = new ResultResponse<UserGetDto>();
         var userOnDb = await _userRepository.GetByIdAsync(authChangePasswordDto.Id);
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
         
         
         var verifyPass = _hasherService.VerifyHashedPassword(authChangePasswordDto.OldPassword, userOnDb.Password);
         if (!verifyPass)
-            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), ErrorMessages.Auth.OldPasswordInvalid);
+            return response.Fail(HttpStatusCode.Unauthorized.GetHashCode(), [ErrorMessages.Auth.OldPasswordInvalid]);
         
         var passwordHasher = _hasherService.HashPassword(authChangePasswordDto.NewPassword);
         userOnDb.Password = passwordHasher;
@@ -188,11 +188,11 @@ public class AuthService(IJwtService jwtService, IUserRepository userRepository,
         var response = new ResultResponse<User>();
         var userOnDb = await _userRepository.GetByEmailAsync(authConfirmCode.Email);
         if (userOnDb is null)
-            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), ErrorMessages.Auth.UserNotFound);
+            return response.Fail(HttpStatusCode.NotFound.GetHashCode(), [ErrorMessages.Auth.UserNotFound]);
         
 
         if(userOnDb.ConfirmationCode != authConfirmCode.Code)
-            return response.Fail(HttpStatusCode.BadRequest.GetHashCode(), ErrorMessages.Auth.InvalidCode);
+            return response.Fail(HttpStatusCode.BadRequest.GetHashCode(), [ErrorMessages.Auth.InvalidCode]);
         
         return response.Success(HttpStatusCode.OK.GetHashCode(), userOnDb);
     }

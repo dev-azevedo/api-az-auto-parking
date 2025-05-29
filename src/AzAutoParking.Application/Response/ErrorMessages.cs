@@ -32,4 +32,14 @@ public static class ErrorMessages
         public static readonly LocalizedMessage ParkingNumberExists =
             new("Parking number already exists", "Número da vaga já existe");
     }
+
+    public static class System
+    {
+        public static readonly LocalizedMessage InternalError = new (en: "An unexpected error occurred. Please contact support", ptBr: "Ocorreu um erro inesperado. Entre em contato com o suporte");
+        public static readonly LocalizedMessage RequiredEmail = new (en: "Email is required", ptBr: "Email completo é obrigatório");
+        public static readonly LocalizedMessage InvalidEmail = new (en: "Invalid email", ptBr: "Email inválido");
+        public static readonly LocalizedMessage RequiredPassword = new (en: "Password is required", ptBr: "Senha é obrigatório");
+        public static readonly LocalizedMessage LongPassword = new (en: "Password must be at least 8 characters long", ptBr: "A senha deve ter pelo menos 8 caracteres");
+        public static readonly LocalizedMessage NotMatchConfirmPassword = new (en: "Password does not match confirm password fields", ptBr: "A senha não corresponde aos campos de confirmação de senha");
+    }
 }
