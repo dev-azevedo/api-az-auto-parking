@@ -15,6 +15,17 @@ Run command in Infra layer
 documentation with postman [here](docs/AzAutoParking.postman_collection.json).
 Import in Postman
 
+# 📫 Response Format:
+Reply to all in this format
+```csharp
+{
+    "statusCode": int,
+    "isSuccess": boolean,
+    "data": T,
+    "messages": List?
+}
+```
+
 ### Api for get data automobile
 var type = 'carros' | 'motos' | 'caminhoes'
 https://parallelum.com.br/fipe/api/v1/{type}/marcas
@@ -33,4 +44,8 @@ Return:
     "nome": "147 C/ CL"
 }
 ```
+
+
+
+
 
