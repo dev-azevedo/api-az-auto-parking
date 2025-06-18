@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Configuration.AddEnvSetup();
 builder.Services.AddDbSetup(builder.Configuration);
+builder.Services.AddDiSetup(builder.Configuration);
 builder.Services.AddJwtSetup();
 builder.Services.AddAuthorization(options => options.AddPolicy("IsAdmin", policy => policy.RequireClaim("isAdmin", "True")));
 builder.Services.Configure<ApiBehaviorOptions>(options => options.SuppressModelStateInvalidFilter = true);
