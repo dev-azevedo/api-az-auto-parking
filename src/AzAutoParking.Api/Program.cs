@@ -1,7 +1,6 @@
 using AzAutoParking.Api.Middleware;
 using AzAutoParking.Api.Setup;
 using AzAutoParking.Api.Utils;
-using AzAutoParking.Application.Response;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);

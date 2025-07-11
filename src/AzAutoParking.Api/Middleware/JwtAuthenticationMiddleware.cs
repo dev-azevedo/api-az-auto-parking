@@ -1,5 +1,4 @@
-﻿using AzAutoParking.Application.Interfaces;
-using AzAutoParking.Application.Response;
+﻿using AzAutoParking.Infra.ExternalServices.Interfaces;
 
 namespace AzAutoParking.Api.Middleware;
 

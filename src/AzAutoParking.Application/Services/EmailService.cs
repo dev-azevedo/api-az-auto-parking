@@ -1,5 +1,5 @@
 ﻿using AzAutoParking.Application.Interfaces;
-using AzAutoParking.Domain.Interfaces;
+using AzAutoParking.Infra.ExternalServices.Interfaces;
 
 namespace AzAutoParking.Application.Services;
 

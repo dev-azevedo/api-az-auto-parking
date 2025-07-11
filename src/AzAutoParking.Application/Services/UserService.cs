@@ -5,7 +5,8 @@ using AzAutoParking.Application.Dto.User;
 using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Response;
 using AzAutoParking.Domain.Interfaces;
-using AzAutoParking.Domain.Models;
+using AzAutoParking.Infra.ExternalServices.Interfaces;
+using AzAutoParking.Infra.ExternalServices.Services;
 
 namespace AzAutoParking.Application.Services;
 

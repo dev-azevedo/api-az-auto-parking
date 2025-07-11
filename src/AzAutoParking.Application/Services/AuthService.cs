@@ -5,6 +5,8 @@ using AzAutoParking.Application.Interfaces;
 using AzAutoParking.Application.Response;
 using AzAutoParking.Domain.Interfaces;
 using AzAutoParking.Domain.Models;
+using AzAutoParking.Infra.ExternalServices.Interfaces;
+using AzAutoParking.Infra.ExternalServices.Services;
 using Mapster;
 
 namespace AzAutoParking.Application.Services;
