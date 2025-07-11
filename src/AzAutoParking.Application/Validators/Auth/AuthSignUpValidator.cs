@@ -10,14 +10,16 @@ public class AuthSignUpValidator : AbstractValidator<AuthSignUpDto>
     public AuthSignUpValidator()
     {
         RuleFor(u => u.FullName)
-            .NotEmpty().WithMessage("Nome completo é obrigatório")
+            .NotEmpty().WithMessage($"{ErrorMessages.Auth.RequiredFullName.En} | {ErrorMessages.Auth.RequiredFullName.PtBr}") //Full name is required
             .MinimumLength(5).WithMessage("Nome completo deve ter pelo menos 5 caracteres")
             .Must(fullname => !Regex.IsMatch(fullname, @"\d"))
             .WithMessage("Nome completo não pode conter números.");
-        
+
         RuleFor(u => u.Email)
-            .NotEmpty().WithMessage("Email é obrigatório.") //Email is required
-            .EmailAddress().WithMessage("Email não é válido.");
+            .NotEmpty().WithMessage(
+                $"{ErrorMessages.System.RequiredEmail.En} | {ErrorMessages.System.RequiredEmail.PtBr}") //Email is required
+            .EmailAddress()
+            .WithMessage($"{ErrorMessages.System.InvalidEmail.En} | {ErrorMessages.System.InvalidEmail.PtBr}");
 
         RuleFor(u => u.Password)
             .NotEmpty()

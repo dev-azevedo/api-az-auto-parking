@@ -21,6 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\AzAutoParking.Application\AzAutoParking.Application.csproj" />
       <ProjectReference Include="..\..\src\AzAutoParking.Infra\AzAutoParking.Infra.csproj" />
       <ProjectReference Include="..\..\src\AzAutoParking.Domain\AzAutoParking.Domain.csproj" />
     </ItemGroup>

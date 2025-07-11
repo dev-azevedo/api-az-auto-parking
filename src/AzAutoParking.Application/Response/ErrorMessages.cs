@@ -23,6 +23,9 @@ public static class ErrorMessages
         
         public static readonly LocalizedMessage EmailAlreadyExists = 
             new("Email already exists", "Email já cadastrado");
+        
+        public static readonly LocalizedMessage RequiredFullName =
+            new ("Full name is required", "Nome completo é obrigatório");
     }
 
     public static class Parking
