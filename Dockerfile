@@ -14,6 +14,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 
 COPY --from=build /app/publish .
 
+COPY src/AzAutoParking.Api/.env .env
+COPY azautoparking.db .
+
 EXPOSE 80
 EXPOSE 443
 
